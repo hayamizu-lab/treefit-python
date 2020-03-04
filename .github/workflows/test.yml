@@ -1,4 +1,4 @@
-name: Check
+name: Test
 on:
   - push
   - pull_request
@@ -22,12 +22,10 @@ jobs:
       - uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python }}
-      - name: Install
+      - name: Install dependencies
         run: |
-          python setup.py install
-      - name: Install dependencies for test
-        run: |
-          pip install pytest
-      - name: Test
+          pip install -r requirements.txt
+          pip install -r requirements-test.txt
+      - name: Run
         run: |
           pytest test
