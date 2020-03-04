@@ -1,0 +1,33 @@
+name: Check
+on:
+  - push
+  - pull_request
+jobs:
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos
+          - ubuntu
+          - windows
+        python:
+          - "3.6"
+          - "3.7"
+          - "3.8"
+    name: Python ${{ matrix.python }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install
+        run: |
+          python setup.py install
+      - name: Install dependencies for test
+        run: |
+          pip install pytest
+      - name: Test
+        run: |
+          pytest test
