@@ -111,7 +111,7 @@ def calculate_eigenvectors_list(original,
         if len(targets) == 0:
             expression = original.get('expression')
             if expression is None:
-                raise 'no expression data: %s' % original
+                raise TypeError('no expression data: %s' % original)
 
             targets.append(expression)
             for i in range(n_perturbations):
