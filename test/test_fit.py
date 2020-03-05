@@ -17,21 +17,21 @@
 import numpy as np
 import pytest
 
-import treefit.generate
-import treefit.treefit
+import treefit
+import treefit.fit
 
 def test_caluculate_distance_matrix():
     values = np.array([[1, 0],
                        [0, 1],
                        [0, 0]])
-    actual_distance_matrix = treefit.treefit.calculate_distance_matrix(values)
+    actual_distance_matrix = treefit.fit.calculate_distance_matrix(values)
     expected_distance_matrix = np.array([[0,          np.sqrt(2), 1],
                                          [np.sqrt(2), 0,          1],
                                          [1,          1,          0]])
     assert np.all(actual_distance_matrix == expected_distance_matrix)
 
 def test_perturbate_knn():
-    expression = treefit.generate.generate_2d_n_arms_star_data(100, 3, 0.1)
+    expression = treefit.data.generate_2d_n_arms_star_data(100, 3, 0.1)
     n_perturbations = 5
     strength = 0.2
     min_diff_mean = 0.001
@@ -39,12 +39,12 @@ def test_perturbate_knn():
     min_diff_variance = 0.00001
     max_diff_variance = 0.001
     perturbated_expression_list = \
-        map(lambda i: treefit.treefit.perturbate_knn(expression, strength),
+        map(lambda i: treefit.fit.perturbate_knn(expression, strength),
             range(n_perturbations))
     original_distance_matrix = \
-        treefit.treefit.calculate_distance_matrix(expression)
+        treefit.fit.calculate_distance_matrix(expression)
     perturbated_distance_matrix_list = \
-        map(treefit.treefit.calculate_distance_matrix,
+        map(treefit.fit.calculate_distance_matrix,
             perturbated_expression_list)
     diffs = \
         map(lambda perturbated_distance_matrix: \
@@ -63,7 +63,7 @@ def test_calculate_mst():
     values = np.array([[1, 0],
                        [0, 3],
                        [0, 0]])
-    mst = treefit.treefit.calculate_mst(values)
+    mst = treefit.fit.calculate_mst(values)
     assert mst.toarray() == \
         pytest.approx(np.array([[0,     0, 1.0],
                                 [0,     0, 1.0],
@@ -72,9 +72,9 @@ def test_calculate_mst():
 def test_calculate_low_dimension_laplacian_eigenvectors():
     values = np.stack([range(1, 11), range(1, 11)],
                       axis=1)
-    mst = treefit.treefit.calculate_mst(values)
+    mst = treefit.fit.calculate_mst(values)
     eigenvectors = \
-        treefit.treefit.calculate_low_dimension_laplacian_eigenvectors(mst, 4)
+        treefit.fit.calculate_low_dimension_laplacian_eigenvectors(mst, 4)
     assert eigenvectors[0, :] == \
         pytest.approx(np.array([-0.44170765,
                                 0.4253254,
@@ -84,17 +84,17 @@ def test_calculate_low_dimension_laplacian_eigenvectors():
 def test_calculate_canonical_correlation():
     values1 = np.stack([range(1, 11), range(1, 11)],
                        axis=1)
-    mst1 = treefit.treefit.calculate_mst(values1)
+    mst1 = treefit.fit.calculate_mst(values1)
     eigenvectors1 = \
-        treefit.treefit.calculate_low_dimension_laplacian_eigenvectors(mst1, 4)
+        treefit.fit.calculate_low_dimension_laplacian_eigenvectors(mst1, 4)
     values2 = np.array([[5, 1, 2, 5, 8, 9, 2, 8, 1, 2],
                         [9, 7, 4, 2, 8, 3, 1, 9, 4, 1]]).T
-    mst2 = treefit.treefit.calculate_mst(values2)
+    mst2 = treefit.fit.calculate_mst(values2)
     eigenvectors2 = \
-        treefit.treefit.calculate_low_dimension_laplacian_eigenvectors(mst2, 4)
+        treefit.fit.calculate_low_dimension_laplacian_eigenvectors(mst2, 4)
     canonical_correlation = \
-        treefit.treefit.calculate_canonical_correlation(eigenvectors1,
-                                                        eigenvectors2)
+        treefit.fit.calculate_canonical_correlation(eigenvectors1,
+                                                    eigenvectors2)
     assert canonical_correlation == \
         pytest.approx(np.array([0.94948070,
                                 0.76344509,
@@ -107,7 +107,7 @@ def test_calculate_grassmann_distance_max_cca():
                                       0.57019530,
                                       0.06708014])
     distance = \
-        treefit.treefit.calculate_grassmann_distance_max_cca(canonical_correlation)
+        treefit.fit.calculate_grassmann_distance_max_cca(canonical_correlation)
     assert distance == pytest.approx(0.3138254297)
 
 def test_calculate_grassmann_distance_rms_cca():
@@ -116,17 +116,17 @@ def test_calculate_grassmann_distance_rms_cca():
                                       0.57019530,
                                       0.06708014])
     distance = \
-        treefit.treefit.calculate_grassmann_distance_rms_cca(canonical_correlation)
+        treefit.fit.calculate_grassmann_distance_rms_cca(canonical_correlation)
     assert distance == pytest.approx(0.7392590158)
 
 def test_treefit_2_arms():
-    star = treefit.generate.generate_2d_n_arms_star_data(200, 2, 0.1)
-    fit = treefit.treefit.treefit({"expression": star},
-                                  "tree-like")
+    star = treefit.data.generate_2d_n_arms_star_data(200, 2, 0.1)
+    fit = treefit.treefit({"expression": star},
+                          "tree-like")
     assert [fit.name, fit.n_principal_paths_candidates[0]] == ["tree-like", 2]
 
 def test_treefit_3_arms():
-    star = treefit.generate.generate_2d_n_arms_star_data(200, 3, 0.1)
-    fit = treefit.treefit.treefit({"expression": star},
-                                  "tree-like")
+    star = treefit.data.generate_2d_n_arms_star_data(200, 3, 0.1)
+    fit = treefit.treefit({"expression": star},
+                          "tree-like")
     assert [fit.name, fit.n_principal_paths_candidates[0]] == ["tree-like", 3]
