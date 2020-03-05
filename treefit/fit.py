@@ -156,6 +156,112 @@ def treefit(target,
             max_p=20,
             verbose=False,
             n_perturbations=20):
+    """Estimate the goodness-of-fit between tree models and data.
+
+    Parameters
+    ----------
+    target : dict
+        The target data to be estimated. It must be one of them:
+
+        * ``{"counts": COUNTS}``
+        * ``{"expression": EXPRESSION}``
+
+        ``COUNTS`` and ``EXPRESSION`` are ``numpy.array``. The rows
+        and columns correspond to samples such as cells and features
+        such as genes. ``COUNTS``'s value is count data such as the
+        number of genes expressed. ``EXPRESSION``'s value is
+        normalized count data.
+
+    name : string
+        The name of target as string.
+
+    perturbations : list
+        How to perturbate the target data.
+
+        If this is ``None``, all available perturbation methods are
+        used.
+
+        You can specify used perturbation methods as ``list``. Here
+        are available methods:
+
+        * ``"poisson"``: A perturbation method for counts data.
+        * ``"knn"``: A perturbation method for expression data.
+
+    normalize : callable
+        How to normalize counts data.
+
+        If this is ``None``, the default normalization is applied.
+
+        You can specify a ``callable`` object that normalized counts
+        data.
+
+    reduce_dimension : callable
+        How to reduce dimension of normalized count data.
+
+        If this is ``None``, the default dimensionality reduction is
+        applied.
+
+        You can specify a ``callable`` object that reduces dimension
+        of normalized counts data.
+
+    build_tree : callable
+        How to build a tree of expression data.
+
+        If this is ``None``, MST is built.
+
+        You can specify a function that builds tree of normalized
+        counts data.
+
+    max_p : int
+        How many low dimension Laplacian eigenvectors are used.
+
+        The default is ``20``.
+
+    n_perturbations : int
+        How many times to perturb.
+
+        The default is `20`.
+
+    Returns
+    -------
+    fit : treefit.fit.Fit
+
+        An estimated result as a ``Fit`` object. It has the following
+        attributes:
+
+        * ``max_cca_distance``: The result of max canonical correlation
+          analysis distance as ``pandas.DataFrame``.
+
+        * ``rms_cca_distance``: The result of root mean square
+          canonical correlation analysis distance as
+          ``pandas.DataFrame``.
+
+        * ``n_principal_paths_candidates``: The candidates of the
+          number of principal paths.
+
+        ``pandas.DataFrame`` of ``max_cca_distance`` and
+        ``rms_cca_distance`` has the same structure. They have the
+        following columns:
+
+        * ``p``: Dimensionality of the feature space of tree
+          structures.
+
+        * ``mean``: The mean of the target distance values.
+
+        * ``standard_deviation``: The standard deviation of the target
+          distance values.
+
+    Examples
+    --------
+
+    >>> import treefit
+    # Generate a star tree data that have normalized expression values
+    # not count data.
+    >>> star = treefit.data.generate_2d_n_arms_star_data(300, 3, 0.1)
+    # Estimate tree-likeness of the tree data.
+    >>> fit = treefit.treefit({"expression": star})
+    """
+
     if name is None:
         name = "fit"
     eigenvectors_list = calculate_eigenvectors_list(target,
@@ -217,6 +323,32 @@ def treefit(target,
                n_principal_paths_candidates)
 
 def plot(fit, *args):
+    """Plot estimated results to get insight.
+
+    Parameters
+    ----------
+    fit : treefit.fit.Fit
+        The estimated result by treefit.fit.treefit() to be
+        visualized.
+
+    *args: [treefit.fit.Fit]
+        The more estimated results to be visualized together or other
+        graphical parameters.
+
+    Examples
+    --------
+    >>> import treefit
+    # Generate a tree data.
+    >>> tree = treefit.data.generate_2d_n_arms_star_data(200, 3, 0.1)
+    # Estimate the goodness-of-fit between tree models and the tree data.
+    >>> fit = treefit.treefit({"expression": tree}, "tree")
+    # Visualize the estimated result.
+    >>> treefit.plot(fit)
+    # You can mix multiple estimated results by adding "name" column.
+    >>> tree2 = treefit.data.generate_2d_n_arms_star_data(200, 3, 0.9)
+    >>> fit2 = treefit.treefit({"expression": tree2}, "tree2")
+    >>> treefit.plot(fit, fit2)
+    """
     fig, axes = plt.subplots(1, 2)
     max_ax = axes[0]
     rms_ax = axes[1]

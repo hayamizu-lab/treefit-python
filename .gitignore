@@ -1,4 +1,7 @@
 /*.egg-info/
 /.eggs/
 /build/
+/doc/_build/
+/doc/api/treefit.*
 __pycache__
+

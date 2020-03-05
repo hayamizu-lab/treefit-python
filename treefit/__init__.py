@@ -16,5 +16,5 @@
 
 __version__ = '1.0.0'
 
-import treefit.generate
-from treefit.treefit import plot
+from treefit.fit import treefit, plot
+import treefit.data

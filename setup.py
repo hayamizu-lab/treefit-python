@@ -17,18 +17,20 @@
 # <http://www.gnu.org/licenses/>.
 
 import os
+import re
 import sys
 
 from setuptools import setup, find_packages
 
-sys.path.insert(0, os.path.dirname(__file__))
-import treefit
+with open('treefit/__init__.py') as init_py:
+    version = re.search('__version__ = \'(.*?)\'',
+                        init_py.read())[1]
 
 with open('README.md') as readme:
     long_description = readme.read()
 
 setup(name='treefit',
-      version=treefit.__version__,
+      version=treefit.version.__version__,
       packages=find_packages(),
       description='The first software for quantitative trajectory inference',
       long_description=long_description,
