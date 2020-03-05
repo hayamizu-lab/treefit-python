@@ -175,8 +175,8 @@ def treefit(target,
         max_cca_distance_values = []
         rms_cca_distance_values = []
         for i in range(1, len(eigenvectors_list)):
-            u = eigenvectors_list[0][:, 1:(p + 1)]
-            v = eigenvectors_list[i][:, 1:(p + 1)]
+            u = eigenvectors_list[0][:, 0:p]
+            v = eigenvectors_list[i][:, 0:p]
             canonical_correlation = calculate_canonical_correlation(u, v)
             max_cca_distance_values.append(
                 calculate_grassmann_distance_max_cca(canonical_correlation))
