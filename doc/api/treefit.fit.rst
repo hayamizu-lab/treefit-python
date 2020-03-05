@@ -14,14 +14,14 @@
 .. License along with this program.  If not, see
 .. <http://www.gnu.org/licenses/>.
 
-.. _api:
+.. currentmodule:: treefit.fit
 
-API reference
-=============
+.. _api.treefit.fit:
 
-.. toctree::
-   :maxdepth: 2
+``treefit.fit``
+===============
 
-   api/treefit
-   api/treefit.fit
-   api/treefit.data
+.. autosummary::
+   :toctree: .
+
+   Fit

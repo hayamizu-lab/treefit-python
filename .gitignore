@@ -2,6 +2,9 @@
 /.eggs/
 /build/
 /doc/_build/
-/doc/api/treefit.*
+/doc/api/treefit.data.*.rst
+/doc/api/treefit.fit.*.rst
+/doc/api/treefit.plot.rst
+/doc/api/treefit.treefit.rst
 __pycache__
 

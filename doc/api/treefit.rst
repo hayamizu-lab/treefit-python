@@ -14,15 +14,15 @@
 .. License along with this program.  If not, see
 .. <http://www.gnu.org/licenses/>.
 
-.. currentmodule:: treefit.data
+.. currentmodule:: treefit
 
-.. _api.data:
+.. _api.treefit:
 
-Data
-====
+``treefit``
+===========
 
 .. autosummary::
    :toctree: .
 
-   generate_2d_n_arms_star_data
-   generate_2d_n_arms_linked_star_data
+   treefit
+   plot

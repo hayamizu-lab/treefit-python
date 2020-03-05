@@ -19,5 +19,8 @@ __version__ = '1.0.0'
 import treefit.data
 import treefit.fit
 
+"""Shortcut"""
 plot = treefit.fit.plot
+
+"""Shortcut"""
 treefit = treefit.fit.treefit
