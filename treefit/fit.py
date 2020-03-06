@@ -322,18 +322,13 @@ def treefit(target,
                rms_cca_distance,
                n_principal_paths_candidates)
 
-def plot(fit, *args):
+def plot(*fits):
     """Plot estimated results to get insight.
 
     Parameters
     ----------
-    fit : treefit.fit.Fit
-        The estimated result by treefit.fit.treefit() to be
-        visualized.
-
-    *args: [treefit.fit.Fit]
-        The more estimated results to be visualized together or other
-        graphical parameters.
+    *fits : [treefit.fit.Fit]
+        The estimated results by treefit.treefit() to be visualized.
 
     Examples
     --------
@@ -368,12 +363,18 @@ def plot(fit, *args):
                         zorder=-10)
         ax.xaxis.set_major_locator(matplotlib.ticker.MultipleLocator(1))
 
-    plot_data_frame(max_ax,
-                    'Analysis of the structural instability\n' +
-                    'of the estimated trees',
-                    'max_cca_distance',
-                    fit.max_cca_distance)
-    plot_data_frame(rms_ax,
-                    'Prediction for\nthe number of principal paths',
-                    'rms_cca_distance',
-                    fit.rms_cca_distance)
+    for fit in fits:
+        plot_data_frame(max_ax,
+                        'Analysis of the structural instability\n' +
+                        'of the estimated trees',
+                        'max_cca_distance',
+                        fit.max_cca_distance)
+        plot_data_frame(rms_ax,
+                        'Prediction for\nthe number of principal paths',
+                        'rms_cca_distance',
+                        fit.rms_cca_distance)
+
+    if len(fits) > 1:
+        legend = [fit.name for fit in fits]
+        max_ax.legend(legend)
+        rms_ax.legend(legend)
