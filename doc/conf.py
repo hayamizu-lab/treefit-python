@@ -21,7 +21,7 @@ import treefit
 
 # -- Project information -----------------------------------------------------
 
-project = 'Treefit'
+project = 'Treefit for Python'
 copyright = '2020 Momoko Hayamizu'
 author = 'Momoko Hayamizu'
 
