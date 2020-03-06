@@ -137,6 +137,34 @@ def calculate_eigenvectors_list(original,
     return list(map(calculate, targets))
 
 class Fit:
+    """The estimated result of :py:func:`treefit.treefit`.
+
+    Attributes
+    ----------
+
+    max_cca_distance: pandas.DataFrame
+        The result of max canonical correlation analysis distance.
+
+        It has the following columns:
+
+        * ``p``: Dimensionality of the feature space of tree
+          structures.
+
+        * ``mean``: The mean of the target distance values.
+
+        * ``standard_deviation``: The standard deviation of the target
+          distance values.
+
+    rms_cca_distance: pandas.DataFrame
+        The result of root mean square canonical correlation analysis
+        distance.
+
+        This has the same columns as ``max_cca_distance``.
+
+    n_principal_paths_candidates: [int]
+        The candidates of the number of principal paths.
+    """
+
     def __init__(self,
                  name,
                  max_cca_distance,
@@ -236,30 +264,7 @@ def treefit(target,
     -------
     fit : treefit.fit.Fit
 
-        An estimated result as a ``Fit`` object. It has the following
-        attributes:
-
-        * ``max_cca_distance``: The result of max canonical correlation
-          analysis distance as ``pandas.DataFrame``.
-
-        * ``rms_cca_distance``: The result of root mean square
-          canonical correlation analysis distance as
-          ``pandas.DataFrame``.
-
-        * ``n_principal_paths_candidates``: The candidates of the
-          number of principal paths.
-
-        ``pandas.DataFrame`` of ``max_cca_distance`` and
-        ``rms_cca_distance`` has the same structure. They have the
-        following columns:
-
-        * ``p``: Dimensionality of the feature space of tree
-          structures.
-
-        * ``mean``: The mean of the target distance values.
-
-        * ``standard_deviation``: The standard deviation of the target
-          distance values.
+        An estimated result as a :py:class:`treefit.fit.Fit` object.
 
     Examples
     --------
