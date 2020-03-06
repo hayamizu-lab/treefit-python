@@ -79,7 +79,7 @@ def calculate_grassmann_distance_max_cca(canonical_correlation):
     return np.sqrt(np.max([0, 1 - max_cos_theta ** 2]))
 
 def calculate_grassmann_distance_rms_cca(canonical_correlation):
-    return np.sqrt(np.average(1 - canonical_correlation ** 2))
+    return np.sqrt(np.mean(1 - canonical_correlation ** 2))
 
 def calculate_eigenvectors_list(original,
                                 perturbations,
