@@ -1,0 +1,19 @@
+title: Treefit for Python
+description: The first software for quantitative trajectory inference
+author: Hayamizu lab
+latest_version: 1.0.0
+markdown: kramdown
+highlighter: rouge
+exclude:
+  - ".dir-locals.el"
+  - "Gemfile"
+  - "Gemfile.lock"
+  - "Rakefile"
+  - "vendor"
+
+kramdown:
+  input: GFM
+  smart_quotes: ["apos", "apos", "quot", "quot"]
+
+sass:
+  sass_dir: assets/stylesheets
