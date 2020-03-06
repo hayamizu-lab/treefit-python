@@ -47,12 +47,15 @@ def generate_2d_n_arms_star_data(n_samples, n_arms, fatness):
     # and fit a star tree with 3 arms. The generated data are a bit noisy but
     # tree-like.
     >>> star_tree_like = treefit.data.generate_2d_n_arms_star_data(500, 3, 0.1)
+    >>> plt.figure()
     >>> plt.scatter(star_tree_like[:, 0], star_tree_like[:, 1])
     # Generate a 2-dimensional star tree data that contain 600 data points
     # and fit a star tree with 5 arms. The generated data are very noisy and
     # less tree-like.
     >>> star_less_tree_like = treefit.data.generate_2d_n_arms_star_data(600, 5, 0.9)
-    >>> plt.scatter(star_less_tree_like[:, 0], star_less_tree_like[:, 1])
+    >>> plt.figure()
+    >>> plt.scatter(star_less_tree_like[:, 0], \
+    ...             star_less_tree_like[:, 1])
     """
     n_features = 2
     standard_deviation = fatness / n_arms
@@ -109,19 +112,21 @@ def generate_2d_n_arms_linked_star_data(n_samples_list,
     # Generate a 2-dimensional linked star tree data that contain
     # 200-400-300 data points and fit a linked star tree with 3-5-4
     # arms. The generated data are a bit noisy but tree-like.
-    >>> linked_star_tree_like =
+    >>> linked_star_tree_like = \
     ...     treefit.data.generate_2d_n_arms_linked_star_data([200, 400, 300],
     ...                                                      [3, 5, 4],
     ...                                                      0.1)
+    >>> plt.figure()
     >>> plt.scatter(linked_star_tree_like[:, 0],
     ...             linked_star_tree_like[:, 1])
     # Generate a 2-dimensional linked star tree data that contain
     # 300-200 data points and fit a linked star tree with 4-3 arms.
     # The generated data are very noisy and less tree-like.
-    >>> linked_star_less_tree_like =
+    >>> linked_star_less_tree_like = \
     ...     treefit.data.generate_2d_n_arms_linked_star_data([300, 200],
     ...                                                      [4, 3],
     ...                                                      0.9)
+    >>> plt.figure()
     >>> plt.scatter(linked_star_less_tree_like[:, 0],
     ...             linked_star_less_tree_like[:, 1])
     """
