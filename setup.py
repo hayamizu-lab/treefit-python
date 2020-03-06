@@ -30,7 +30,7 @@ with open('README.md') as readme:
     long_description = readme.read()
 
 setup(name='treefit',
-      version=treefit.version.__version__,
+      version=version,
       packages=find_packages(),
       description='The first software for quantitative trajectory inference',
       long_description=long_description,
