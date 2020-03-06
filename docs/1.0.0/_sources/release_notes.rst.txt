@@ -14,12 +14,12 @@
 .. License along with this program.  If not, see
 .. <http://www.gnu.org/licenses/>.
 
-Release note
-============
+Release notes
+=============
 
 .. toctree::
    :maxdepth: 2
    :glob:
    :reversed:
 
-   release_note/*
+   release_notes/*

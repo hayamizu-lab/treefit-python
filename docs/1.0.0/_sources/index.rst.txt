@@ -32,4 +32,4 @@ best fits your data.
    install
    getting_started
    api
-   release_note
+   release_notes
