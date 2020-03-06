@@ -7,7 +7,7 @@ SPHINXOPTS    ?= -j8 -W
 SPHINXBUILD   ?= sphinx-build
 SPHINXAUTOGEN ?= sphinx-autogen
 SOURCEDIR     = doc
-BUILDDIR      = docs/$(VERSION)
+BUILDDIR      = doc/_build
 
 # Put it first so that "make" without argument is like "make help".
 help:
