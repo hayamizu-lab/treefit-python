@@ -42,6 +42,7 @@ setup(name='treefit',
           'scipy',
           'sklearn',
       ],
+      python_requires='>=3',
       tests_require=[
           'pytest',
       ],
@@ -64,4 +65,8 @@ setup(name='treefit',
       ],
       license="LGPLv3+",
       url='https://hayamizu-lab.github.io/treefit-python/',
+      project_urls={
+          'Source': 'https://github.com/hayamizu-lab/treefit-python/',
+          'Tracker': 'https://github.com/hayamizu-lab/treefit-python/issues/',
+      },
 )

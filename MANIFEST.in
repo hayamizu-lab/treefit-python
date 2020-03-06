@@ -1,0 +1,6 @@
+exclude .gitignore
+exclude requirements-test.txt
+exclude requirements.txt
+prune .github/
+prune doc/
+prune docs/
