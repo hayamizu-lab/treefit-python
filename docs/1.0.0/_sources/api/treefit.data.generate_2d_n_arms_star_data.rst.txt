@@ -1,0 +1,6 @@
+treefit.data.generate\_2d\_n\_arms\_star\_data
+==============================================
+
+.. currentmodule:: treefit.data
+
+.. autofunction:: generate_2d_n_arms_star_data

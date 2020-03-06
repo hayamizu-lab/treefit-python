@@ -1,0 +1,556 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Treefit - Getting started &mdash; Treefit for Python 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API reference" href="api.html" />
+    <link rel="prev" title="Install" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Treefit for Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Treefit - Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#generating-toy-data">1. Generating toy data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tree-like-toy-data">1.1. Tree-like toy data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#less-tree-like-noisy-toy-data">1.2. Less tree-like, noisy toy data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#analyzing-the-data">2. Analyzing the data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">2.1. Tree-like toy data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">2.2. Less tree-like, noisy toy data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#comparing-two-results">2.3. Comparing two results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#interpreting-the-results">3. Interpreting the results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#estimating-the-tree-likeness-of-data">3.1. Estimating the tree-likeness of data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#predicting-the-number-of-principal-paths-in-the-underlying-tree">3.2. Predicting the number of principal paths in the underlying tree</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Treefit for Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Treefit - Getting started</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/getting_started.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="treefit-getting-started">
+<span id="getting-started"></span><h1>Treefit - Getting started<a class="headerlink" href="#treefit-getting-started" title="Permalink to this headline">¶</a></h1>
+<p>This document is a user-friendly manual on how to use the Treefit
+package, which is the first toolkit for quantitative trajectory
+inference using single-cell gene expression data. In this tutorial, we
+demonstrate how to generate and analyze two kinds of toy data with the
+aim to help get familiar with the practical workflow of Treefit.</p>
+<div class="section" id="generating-toy-data">
+<h2>1. Generating toy data<a class="headerlink" href="#generating-toy-data" title="Permalink to this headline">¶</a></h2>
+<p>While the Treefit package has been developed to help biologists who
+wish to perform trajectory inference from single-cell gene expression
+data, Treefit can also be viewed as a toolkit to generate and analyze
+a point cloud in <em>d</em>-dimensional Euclidean space (<em>i.e.</em>, simulated
+gene expression data).</p>
+<p>Treefit provides some useful functions to generate artificial
+datasets. For example, as we will now demonstrate, the function
+<a class="reference internal" href="api/treefit.data.generate_2d_n_arms_star_data.html#treefit.data.generate_2d_n_arms_star_data" title="treefit.data.generate_2d_n_arms_star_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">treefit.data.generate_2d_n_arms_star_data()</span></code></a> creates data
+that approximately fit a star tree with the number of arms or
+branches; the term star means a tree that looks like the star symbol
+“*”; for example, the alphabet letters Y and X can be viewed as star
+trees that have three and four arms, respectively.</p>
+<p>The rows and columns of the generated data correspond to data points
+(<em>i.e.</em>, <em>n</em> single cells) and their features (<em>i.e.</em>, expression
+values of <em>d</em> different genes), respectively. The Treefit package can
+be used to analyze both raw count data and normalized expression data,
+but regarding the production of toy data, it is meant to be used to
+generate continuous data like normalized expression values.</p>
+<p>Importantly, we can generate data with a desired level of noise by
+changing the value of the <code class="docutils literal notranslate"><span class="pre">fatness</span></code> parameter of this function. For
+example, if you set the <code class="docutils literal notranslate"><span class="pre">fatness</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">0.0</span></code> then you will
+get precisely tree-like data without noise. By contrast, setting the
+<code class="docutils literal notranslate"><span class="pre">fatness</span></code> to <code class="docutils literal notranslate"><span class="pre">1.0</span></code> gives very noisy data that are no longer
+tree-like. In this tutorial, we deal with two types of toy data whose
+<code class="docutils literal notranslate"><span class="pre">fatness</span></code> values are <code class="docutils literal notranslate"><span class="pre">0.1</span></code> and <code class="docutils literal notranslate"><span class="pre">0.8</span></code>, respectively. We note that
+Treefit can be used to generate and analyze high dimensional datasets
+but we focus on generating 2-dimensional data to make things as simple
+as possible in this introductory tutorial.</p>
+<div class="section" id="tree-like-toy-data">
+<h3>1.1. Tree-like toy data<a class="headerlink" href="#tree-like-toy-data" title="Permalink to this headline">¶</a></h3>
+<p>Let us first generate 2-dimensional tree-like data that contain 500
+data points and reasonably fit a star tree with three arms. We can
+create such data and draw a scatter plot of them (Figure 1) simply by
+executing the following two lines of code:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [1]: </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+
+<span class="gp">In [2]: </span><span class="kn">import</span> <span class="nn">treefit</span>
+
+<span class="gp">In [3]: </span><span class="n">star_tree_like</span> <span class="o">=</span> <span class="n">treefit</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">generate_2d_n_arms_star_data</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+
+<span class="gp">In [4]: </span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">();</span>
+
+<span class="gp">In [5]: </span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">star_tree_like</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="gp">   ...: </span>            <span class="n">star_tree_like</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]);</span>
+<span class="gp">   ...: </span>
+</pre></div>
+</div>
+<img alt="_images/generate_tree_like_data.png" src="_images/generate_tree_like_data.png" />
+<p>Figure 1. A scatter plot of tree-like toy data generated by Treefit</p>
+</div>
+<div class="section" id="less-tree-like-noisy-toy-data">
+<h3>1.2. Less tree-like, noisy toy data<a class="headerlink" href="#less-tree-like-noisy-toy-data" title="Permalink to this headline">¶</a></h3>
+<p>Similarly, we can generate noisy data that do not look so tree-like as
+the previous one. In this tutorial, we simply change the value of the
+<code class="docutils literal notranslate"><span class="pre">fatness</span></code> parameter from <code class="docutils literal notranslate"><span class="pre">0.1</span></code> to <code class="docutils literal notranslate"><span class="pre">0.8</span></code> in order to obtain
+non-tree-like data. The following two lines of code yields a scatter
+plot shown in Figure 2:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [6]: </span><span class="n">star_less_tree_like</span> <span class="o">=</span> <span class="n">treefit</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">generate_2d_n_arms_star_data</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+
+<span class="gp">In [7]: </span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">();</span>
+
+<span class="gp">In [8]: </span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">star_less_tree_like</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="gp">   ...: </span>            <span class="n">star_less_tree_like</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]);</span>
+<span class="gp">   ...: </span>
+</pre></div>
+</div>
+<img alt="_images/generate_less_tree_like_data.png" src="_images/generate_less_tree_like_data.png" />
+<p>Figure 2. A scatter plot of noisy toy data generated by Treefit</p>
+</div>
+</div>
+<div class="section" id="analyzing-the-data">
+<h2>2. Analyzing the data<a class="headerlink" href="#analyzing-the-data" title="Permalink to this headline">¶</a></h2>
+<p>Having generated two datasets whose tree-likeness are different, we
+can analyze each of them. The Treefit package allows us to estimate
+how well the data can be explained by tree models and to predict how
+many “principal paths” there are in the best-fit tree. As shown in
+Figure 1, the points in the first data clearly form a shape like the
+letter “Y” and so the data are considered to fit a star tree with
+three arms very well, whereas Figure 2 indicates that the second data
+are no longer very tree-like because of the high level of added
+noise. Our goal in this tutorial is to reproduce these conclusions by
+using Treefit.</p>
+<div class="section" id="id1">
+<h3>2.1. Tree-like toy data<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Let us estimate the goodness-of-fit between tree models and the first
+toy data. This can be done by using <a class="reference internal" href="api/treefit.treefit.html#treefit.treefit" title="treefit.treefit"><code class="xref py py-func docutils literal notranslate"><span class="pre">treefit.treefit()</span></code></a> as
+follows. The <code class="docutils literal notranslate"><span class="pre">name</span></code> parameter is optional but we should specify it,
+if possible. Because it’s useful to identify the estimation.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [9]: </span><span class="n">fit_tree_like</span> <span class="o">=</span> <span class="n">treefit</span><span class="o">.</span><span class="n">treefit</span><span class="p">({</span><span class="s1">&#39;expression&#39;</span><span class="p">:</span> <span class="n">star_tree_like</span><span class="p">},</span>
+<span class="gp">   ...: </span>                                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;tree-like&#39;</span><span class="p">)</span>
+<span class="gp">   ...: </span>
+
+<span class="gp">In [10]: </span><span class="k">print</span><span class="p">(</span><span class="n">fit_tree_like</span><span class="p">)</span>
+<span class="go">treefit.fit.Fit: tree-like</span>
+<span class="go">max_cca_distance:</span>
+<span class="go">     p      mean  standard_deviation</span>
+<span class="go">0    1  0.235897            0.188821</span>
+<span class="go">1    2  0.067618            0.010949</span>
+<span class="go">2    3  0.058757            0.008495</span>
+<span class="go">3    4  0.052357            0.007549</span>
+<span class="go">4    5  0.048058            0.005991</span>
+<span class="go">5    6  0.045720            0.004520</span>
+<span class="go">6    7  0.042863            0.004253</span>
+<span class="go">7    8  0.040709            0.004132</span>
+<span class="go">8    9  0.039799            0.004287</span>
+<span class="go">9   10  0.038869            0.004698</span>
+<span class="go">10  11  0.038120            0.004707</span>
+<span class="go">11  12  0.036902            0.004095</span>
+<span class="go">12  13  0.035330            0.003649</span>
+<span class="go">13  14  0.033686            0.003908</span>
+<span class="go">14  15  0.032423            0.004345</span>
+<span class="go">15  16  0.031327            0.004464</span>
+<span class="go">16  17  0.030444            0.004815</span>
+<span class="go">17  18  0.029613            0.005063</span>
+<span class="go">18  19  0.028751            0.004952</span>
+<span class="go">19  20  0.027949            0.005129</span>
+<span class="go">rms_cca_distance:</span>
+<span class="go">     p      mean  standard_deviation</span>
+<span class="go">0    1  0.235897            0.188821</span>
+<span class="go">1    2  0.082652            0.011567</span>
+<span class="go">2    3  0.095155            0.012100</span>
+<span class="go">3    4  0.169701            0.093088</span>
+<span class="go">4    5  0.151403            0.018854</span>
+<span class="go">5    6  0.185432            0.031812</span>
+<span class="go">6    7  0.205832            0.050099</span>
+<span class="go">7    8  0.217527            0.025402</span>
+<span class="go">8    9  0.267646            0.041051</span>
+<span class="go">9   10  0.289114            0.037158</span>
+<span class="go">10  11  0.337325            0.031750</span>
+<span class="go">11  12  0.361709            0.028128</span>
+<span class="go">12  13  0.337732            0.037293</span>
+<span class="go">13  14  0.366247            0.032304</span>
+<span class="go">14  15  0.388535            0.027895</span>
+<span class="go">15  16  0.388885            0.030170</span>
+<span class="go">16  17  0.403269            0.026811</span>
+<span class="go">17  18  0.402473            0.025656</span>
+<span class="go">18  19  0.397757            0.028012</span>
+<span class="go">19  20  0.417100            0.023265</span>
+<span class="go">n_principal_paths_candidates:</span>
+<span class="go">[3, 6, 14]</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="api/treefit.treefit.html#treefit.treefit" title="treefit.treefit"><code class="xref py py-func docutils literal notranslate"><span class="pre">treefit.treefit()</span></code></a> returns a <a class="reference internal" href="api/treefit.fit.Fit.html#treefit.fit.Fit" title="treefit.fit.Fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">treefit.fit.Fit</span></code></a>
+object that summarizes the analysis of Treefit. We will explain how to
+interpret the results in the next section. For now, we may focus on
+learning how to use Treefit.</p>
+<p>As we will see later, it is helpful to visualize the results using
+<a class="reference internal" href="api/treefit.plot.html#treefit.plot" title="treefit.plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">treefit.plot()</span></code></a>. By executing <code class="docutils literal notranslate"><span class="pre">treefit.plot(fit_tree_like)</span></code>,
+we can obtain the following two user-friendly visual plots, which
+makes it easier to interpret the results of the Treefit analysis.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [11]: </span><span class="n">treefit</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fit_tree_like</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/plot_tree_like_data_estimation_result.png" src="_images/plot_tree_like_data_estimation_result.png" />
+<p>Figure 3. The output for the tree-like data shown in Figure 1</p>
+</div>
+<div class="section" id="id2">
+<h3>2.2. Less tree-like, noisy toy data<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>We can analyze the second toy data in the same manner.</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [12]: </span><span class="n">fit_less_tree_like</span> <span class="o">=</span> \
+<span class="gp">   ....: </span>    <span class="n">treefit</span><span class="o">.</span><span class="n">treefit</span><span class="p">({</span><span class="s1">&#39;expression&#39;</span><span class="p">:</span> <span class="n">star_less_tree_like</span><span class="p">},</span>
+<span class="gp">   ....: </span>                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;less-tree-like&#39;</span><span class="p">)</span>
+<span class="gp">   ....: </span>
+
+<span class="gp">In [13]: </span><span class="k">print</span><span class="p">(</span><span class="n">fit_less_tree_like</span><span class="p">)</span>
+<span class="go">treefit.fit.Fit: less-tree-like</span>
+<span class="go">max_cca_distance:</span>
+<span class="go">     p      mean  standard_deviation</span>
+<span class="go">0    1  0.839641            0.183286</span>
+<span class="go">1    2  0.380628            0.055410</span>
+<span class="go">2    3  0.332805            0.063337</span>
+<span class="go">3    4  0.294448            0.061250</span>
+<span class="go">4    5  0.257457            0.057578</span>
+<span class="go">5    6  0.235321            0.048798</span>
+<span class="go">6    7  0.219396            0.047125</span>
+<span class="go">7    8  0.203439            0.043280</span>
+<span class="go">8    9  0.187008            0.039974</span>
+<span class="go">9   10  0.173920            0.038030</span>
+<span class="go">10  11  0.157908            0.034891</span>
+<span class="go">11  12  0.144487            0.031147</span>
+<span class="go">12  13  0.138519            0.029138</span>
+<span class="go">13  14  0.128046            0.026593</span>
+<span class="go">14  15  0.114848            0.022790</span>
+<span class="go">15  16  0.111033            0.021323</span>
+<span class="go">16  17  0.103501            0.019457</span>
+<span class="go">17  18  0.100746            0.020263</span>
+<span class="go">18  19  0.098296            0.021307</span>
+<span class="go">19  20  0.094901            0.022276</span>
+<span class="go">rms_cca_distance:</span>
+<span class="go">     p      mean  standard_deviation</span>
+<span class="go">0    1  0.839641            0.183286</span>
+<span class="go">1    2  0.466818            0.090435</span>
+<span class="go">2    3  0.576102            0.069051</span>
+<span class="go">3    4  0.618165            0.053080</span>
+<span class="go">4    5  0.658626            0.030282</span>
+<span class="go">5    6  0.639451            0.037666</span>
+<span class="go">6    7  0.651527            0.037660</span>
+<span class="go">7    8  0.661424            0.039781</span>
+<span class="go">8    9  0.652114            0.046361</span>
+<span class="go">9   10  0.647510            0.040193</span>
+<span class="go">10  11  0.629195            0.037750</span>
+<span class="go">11  12  0.624219            0.036357</span>
+<span class="go">12  13  0.602605            0.038781</span>
+<span class="go">13  14  0.607283            0.033033</span>
+<span class="go">14  15  0.604295            0.031332</span>
+<span class="go">15  16  0.602405            0.033114</span>
+<span class="go">16  17  0.593289            0.035128</span>
+<span class="go">17  18  0.593357            0.031264</span>
+<span class="go">18  19  0.594745            0.026781</span>
+<span class="go">19  20  0.588749            0.025812</span>
+<span class="go">n_principal_paths_candidates:</span>
+<span class="go">[3, 7, 14, 18]</span>
+</pre></div>
+</div>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [14]: </span><span class="n">treefit</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fit_less_tree_like</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/plot_less_tree_like_data_estimation_result.png" src="_images/plot_less_tree_like_data_estimation_result.png" />
+<p>Figure 4. The output for the noisy data shown in Figure 2</p>
+</div>
+<div class="section" id="comparing-two-results">
+<h3>2.3. Comparing two results<a class="headerlink" href="#comparing-two-results" title="Permalink to this headline">¶</a></h3>
+<p>We can compare different results by passing all results to
+<a class="reference internal" href="api/treefit.plot.html#treefit.plot" title="treefit.plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">treefit.plot()</span></code></a> as follows:</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [15]: </span><span class="n">treefit</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fit_tree_like</span><span class="p">,</span> <span class="n">fit_less_tree_like</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/plot_estimation_results.png" src="_images/plot_estimation_results.png" />
+<p>Figure 5. Comparison of the plots shown in Figure 3 and Figure 4</p>
+</div>
+</div>
+<div class="section" id="interpreting-the-results">
+<h2>3. Interpreting the results<a class="headerlink" href="#interpreting-the-results" title="Permalink to this headline">¶</a></h2>
+<p>Before interpreting the previous results, we briefly summarize the
+process of the Treefit analysis that consists of the following three
+steps.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>First, Treefit repeatedly “perturbs” the input data (<em>i.e.</em>, adds
+some small noise to the original row count data or normalized
+expression data) in order to produce many slightly different
+datasets that may have been acquired in the biological
+experiment.</p></li>
+<li><p>Second, for each dataset, Treefit calculates a distance matrix
+that represents the dissimilarities between sample cells and then
+constructs a tree from each distance matrix. The current version
+of Treefit computes a minimum spanning tree (MST) that has been
+widely used for trajectory inference.</p></li>
+<li><p>Finally, Treefit evaluates the goodness-of-fit between the data
+and tree models. The underlying idea of this method is that the
+structure of trees inferred from tree-like data tends to have
+high robustness to noise, compared to non-tree-like
+data. Therefore, Treefit measures the mutual similarity between
+estimated trees in order to check the stability of the tree
+structures. To this end, Treefit constructs a
+&lt;i&gt;p&lt;/i&gt;-dimensional subspace that extracts the main features of
+each tree structure and then measuring mutual similarities
+between the subspaces by using a special type of metrics called
+the Grassmann distance. In principle, when the estimated trees
+are mutually similar in their structure, the mean and standard
+deviation (SD) of the Grassmann distance are small.</p></li>
+</ol>
+</div></blockquote>
+<p>Although the word “Grassmann distance” may sound so unfamiliar to some
+readers, the concept appears in different disguises in various
+practical contexts. For example, the Grassmann distance has a close
+connection to canonical correlation analysis (CCA). Treefit provides
+two Grassmann distances <code class="docutils literal notranslate"><span class="pre">treefit.fit.Fit.max_cca_distance</span></code> and
+<code class="docutils literal notranslate"><span class="pre">treefit.fit.Fit.rms_cca_distance</span></code> that can be used for different
+purposes as we now explain.</p>
+<div class="section" id="estimating-the-tree-likeness-of-data">
+<h3>3.1. Estimating the tree-likeness of data<a class="headerlink" href="#estimating-the-tree-likeness-of-data" title="Permalink to this headline">¶</a></h3>
+<p>The Treefit analysis using the first Grassmann distance
+<code class="docutils literal notranslate"><span class="pre">treefit.fit.Fit.max_cca_distance</span></code> (shown in the left panel of
+Figure 5) tells us the goodness-of-fit between data and tree
+models. In principle, as mentioned earlier, if the mean and SD of
+<code class="docutils literal notranslate"><span class="pre">treefit.fit.Fit.max_cca_distance</span></code> are small, then this means that
+the estimated trees are mutually similar in their structure. As can be
+observed, the distance changes according to the dimensionality <em>p</em> of
+the feature space, but <code class="docutils literal notranslate"><span class="pre">treefit.fit.Fit.max_cca_distance</span></code> has the
+property that the value decreases monotonically as <em>p</em> increases
+for any datasets.</p>
+<p>Comparing the Treefit results for the two datasets, we see that the
+mean Grassmann distance for the first data does not fall below the
+second one regardless of the value of <em>p</em> and that the SD of the
+Grassmann distance for the first data is very small compared to the
+second data. These results imply that the estimated tree structures
+are very robust to noise in the first case but not in the second
+case. Thus, Treefit has verified that the first data are highly
+tree-like while the second data are not.</p>
+</div>
+<div class="section" id="predicting-the-number-of-principal-paths-in-the-underlying-tree">
+<h3>3.2. Predicting the number of principal paths in the underlying tree<a class="headerlink" href="#predicting-the-number-of-principal-paths-in-the-underlying-tree" title="Permalink to this headline">¶</a></h3>
+<p>The Treefit analysis using the other Grassmann distance
+<code class="docutils literal notranslate"><span class="pre">treefit.fit.Fit.rms_cca_distance</span></code> (shown in the right panel of
+Figure 5) is useful to infer the number of “principal paths” in the
+best-fit tree. From a biological perspective, this analysis can be
+used to discover a novel or unexpected cell type from single-cell gene
+expression.</p>
+<p>Unlike the previous Grassmann distance, the mean value of
+<code class="docutils literal notranslate"><span class="pre">treefit.fit.Fit.rms_cca_distance</span></code> can fluctuate depending on the
+value of <em>p</em>. Interestingly, we can predict the number of principal
+paths in the best-fit tree by exploring for which <em>p</em> the distance
+value reaches “the bottom of a valley” (<em>i.e.</em>, attains a local
+minimum). More precisely, when <code class="docutils literal notranslate"><span class="pre">treefit.fit.Fit.rms_cca_distance</span></code>
+attains a local minimum at a certain <em>p</em>, the value <em>p</em> +1 indicates
+the number of principal paths in the best-fit
+tree. <code class="docutils literal notranslate"><span class="pre">treefit.fit.Fit.n_principal_paths_candidates</span></code> has these <em>p</em> +1
+values. We don’t need to calculate them manually. When Treefit
+produces a plot having more than one valleys, the smallest <em>p</em> is
+usually most informative for the prediction. The smallest <em>p</em> +1 value
+can be obtained by <code class="docutils literal notranslate"><span class="pre">treefit.fit.Fit.n_principal_paths_candidates[0]</span></code>.</p>
+<p>Comparing the Treefit results for the two datasets, we first see that
+both plots attains a local minimum at <em>p</em> =2. This means that for both
+datasets the best-fit tree has <em>p</em> +1=3 principle paths, which is
+correct because both were generated from the same star tree with three
+arms. Another important point to be made is that the SD of the
+Grassmann distance for the first data is very small at <em>p</em> =2 compared
+to that for the second data; in other words, Treefit made this
+prediction more confidently for the first dataset than for the second
+one. This result is reasonable because the first dataset is much less
+noisy than the second one. Thus, Treefit has correctly determined the
+number of principal paths in the underlying tree together with the
+goodness-of-fit for each dataset.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api.html" class="btn btn-neutral float-right" title="API reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="install.html" class="btn btn-neutral float-left" title="Install" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020 Momoko Hayamizu
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

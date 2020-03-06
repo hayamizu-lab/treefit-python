@@ -1,0 +1,6 @@
+treefit.plot
+============
+
+.. currentmodule:: treefit
+
+.. autofunction:: plot

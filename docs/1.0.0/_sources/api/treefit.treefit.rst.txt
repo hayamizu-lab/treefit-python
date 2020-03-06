@@ -1,0 +1,6 @@
+treefit.treefit
+===============
+
+.. currentmodule:: treefit
+
+.. autofunction:: treefit

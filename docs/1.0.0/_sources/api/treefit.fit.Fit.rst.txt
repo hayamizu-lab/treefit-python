@@ -1,0 +1,22 @@
+treefit.fit.Fit
+===============
+
+.. currentmodule:: treefit.fit
+
+.. autoclass:: Fit
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Fit.__init__
+   
+   
+
+   
+   
+   

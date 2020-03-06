@@ -1,0 +1,586 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>treefit.fit &mdash; Treefit for Python 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Treefit for Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Treefit - Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Treefit for Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>treefit.fit</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for treefit.fit</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) 2020  Momoko Hayamizu &lt;hayamizu@ism.ac.jp&gt;</span>
+<span class="c1">#</span>
+<span class="c1"># This program is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Lesser General Public License as</span>
+<span class="c1"># published by the Free Software Foundation, either version 3 of the</span>
+<span class="c1"># License, or (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># This program is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU Lesser General Public</span>
+<span class="c1"># License along with this program.  If not, see</span>
+<span class="c1"># &lt;http://www.gnu.org/licenses/&gt;.</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.ticker</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+<span class="kn">import</span> <span class="nn">sklearn.decomposition</span>
+
+<span class="k">def</span> <span class="nf">perturbate_poisson</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">strength</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">poisson</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span> <span class="o">*</span> <span class="n">strength</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">calculate_distance_matrix</span><span class="p">(</span><span class="n">expression</span><span class="p">):</span>
+    <span class="c1"># Use &#39;euclidean&#39; method for now.</span>
+    <span class="c1"># TODO: make method parameter</span>
+    <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">spatial</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">cdist</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">expression</span><span class="p">,</span> <span class="s1">&#39;euclidean&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">calculate_mst</span><span class="p">(</span><span class="n">expression</span><span class="p">):</span>
+    <span class="n">distance_matrix</span> <span class="o">=</span> <span class="n">calculate_distance_matrix</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+    <span class="n">mst</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">csgraph</span><span class="o">.</span><span class="n">minimum_spanning_tree</span><span class="p">(</span><span class="n">distance_matrix</span><span class="p">)</span>
+    <span class="c1"># Remove weights</span>
+    <span class="n">mst</span><span class="p">[</span><span class="n">mst</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">mst</span> <span class="o">+</span> <span class="n">mst</span><span class="o">.</span><span class="n">T</span>
+
+<span class="k">def</span> <span class="nf">perturbate_knn</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">strength</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">shape</span>
+    <span class="c1"># TODO: Improve</span>
+    <span class="n">k_nearest_neighbors</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">*</span> <span class="mf">0.0125</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">k_nearest_neighbors</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">k_nearest_neighbors</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">standard_deviation</span> <span class="o">=</span> <span class="n">strength</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">k_nearest_neighbors</span><span class="p">)</span>
+    <span class="n">distance_matrix</span> <span class="o">=</span> <span class="n">calculate_distance_matrix</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+    <span class="n">perturbated_expression</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_features</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_samples</span><span class="p">):</span>
+        <span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">distance_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="n">nearest_neighbors</span> <span class="o">=</span> \
+            <span class="n">expression</span><span class="p">[</span><span class="n">sorted_indices</span><span class="p">[</span><span class="mi">1</span><span class="p">:(</span><span class="n">k_nearest_neighbors</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]]</span>
+        <span class="n">diffs</span> <span class="o">=</span> <span class="n">nearest_neighbors</span> <span class="o">-</span> <span class="n">expression</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="n">standard_deviation</span><span class="p">,</span>
+                                   <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">n_features</span><span class="p">,))</span>
+        <span class="n">weighted_diffs</span> <span class="o">=</span> <span class="n">diffs</span> <span class="o">*</span> <span class="n">weights</span>
+        <span class="n">perturbated_expression</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">expression</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weighted_diffs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">perturbated_expression</span>
+
+<span class="k">def</span> <span class="nf">calculate_low_dimension_laplacian_eigenvectors</span><span class="p">(</span><span class="n">mst</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="n">laplacian</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">csgraph</span><span class="o">.</span><span class="n">laplacian</span><span class="p">(</span><span class="n">mst</span><span class="p">)</span>
+    <span class="n">eigenvalues</span><span class="p">,</span> <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">laplacian</span><span class="o">.</span><span class="n">toarray</span><span class="p">())</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">eigenvalues</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">abs_tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">):</span>
+        <span class="n">eigenvalues</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">eigenvectors</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+    <span class="n">low_dimension_values</span> <span class="o">=</span> <span class="n">eigenvalues</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">p</span><span class="p">]</span>
+    <span class="n">low_dimension_vectors</span> <span class="o">=</span> <span class="n">eigenvectors</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="n">p</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">low_dimension_values</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">low_dimension_values</span><span class="p">):</span>
+        <span class="n">low_dimension_vectors</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">orth</span><span class="p">(</span><span class="n">low_dimension_vectors</span><span class="p">)</span>
+    <span class="n">low_dimension_vectors</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">low_dimension_vectors</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">low_dimension_vectors</span>
+
+<span class="k">def</span> <span class="nf">calculate_canonical_correlation</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="n">uTv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">uTv</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">calculate_grassmann_distance_max_cca</span><span class="p">(</span><span class="n">canonical_correlation</span><span class="p">):</span>
+    <span class="n">max_cos_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">canonical_correlation</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">max_cos_theta</span> <span class="o">**</span> <span class="mi">2</span><span class="p">]))</span>
+
+<span class="k">def</span> <span class="nf">calculate_grassmann_distance_rms_cca</span><span class="p">(</span><span class="n">canonical_correlation</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">canonical_correlation</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">calculate_eigenvectors_list</span><span class="p">(</span><span class="n">original</span><span class="p">,</span>
+                                <span class="n">perturbations</span><span class="p">,</span>
+                                <span class="n">normalize</span><span class="p">,</span>
+                                <span class="n">reduce_dimension</span><span class="p">,</span>
+                                <span class="n">build_tree</span><span class="p">,</span>
+                                <span class="n">max_p</span><span class="p">,</span>
+                                <span class="n">n_perturbations</span><span class="p">):</span>
+    <span class="n">poisson_strength</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="c1"># TODO: Improve</span>
+    <span class="n">knn_strength</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">500</span> <span class="o">/</span> <span class="mi">200</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+    <span class="n">targets</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">perturbations</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="s1">&#39;poisson&#39;</span> <span class="ow">in</span> <span class="n">perturbations</span><span class="p">:</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;counts&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">counts</span><span class="p">:</span>
+            <span class="n">targets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_perturbations</span><span class="p">):</span>
+                <span class="n">perturbated_counts</span> <span class="o">=</span> <span class="n">perturbate_poisson</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">poisson_strength</span><span class="p">)</span>
+                <span class="n">targets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">perturbated_counts</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">perturbations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;no count data: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">original</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># TODO: Normalize</span>
+            <span class="k">pass</span>
+
+    <span class="k">if</span> <span class="n">perturbations</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="s1">&#39;knn&#39;</span> <span class="ow">in</span> <span class="n">perturbations</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">expression</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;expression&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">expression</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;no expression data: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">original</span><span class="p">)</span>
+
+            <span class="n">targets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_perturbations</span><span class="p">):</span>
+                <span class="n">perturbated_expression</span> <span class="o">=</span> <span class="n">perturbate_knn</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">knn_strength</span><span class="p">)</span>
+                <span class="n">targets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">perturbated_expression</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">targets</span> <span class="o">=</span> \
+                <span class="p">[</span><span class="n">perturbate_knn</span><span class="p">(</span><span class="n">expression</span><span class="p">,</span> <span class="n">knn_strength</span><span class="p">)</span> <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="n">target</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">reduce_dimension</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reduce_dimension</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reduce_dimension</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="n">n_dimensions</span> <span class="o">=</span> <span class="n">reduce_dimension</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">n_dimensions</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">pca</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">decomposition</span><span class="o">.</span><span class="n">PCA</span><span class="p">(</span><span class="n">n_dimensions</span><span class="p">)</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">reduce_dimension</span><span class="p">:</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">reduce_dimension</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">calculate_mst</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">calculate_low_dimension_laplacian_eigenvectors</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">max_p</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">calculate</span><span class="p">,</span> <span class="n">targets</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">Fit</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;The estimated result of :py:func:`treefit.treefit`.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    max_cca_distance: pandas.DataFrame</span>
+<span class="sd">        The result of max canonical correlation analysis distance.</span>
+
+<span class="sd">        It has the following columns:</span>
+
+<span class="sd">        * ``p``: Dimensionality of the feature space of tree</span>
+<span class="sd">          structures.</span>
+
+<span class="sd">        * ``mean``: The mean of the target distance values.</span>
+
+<span class="sd">        * ``standard_deviation``: The standard deviation of the target</span>
+<span class="sd">          distance values.</span>
+
+<span class="sd">    rms_cca_distance: pandas.DataFrame</span>
+<span class="sd">        The result of root mean square canonical correlation analysis</span>
+<span class="sd">        distance.</span>
+
+<span class="sd">        This has the same columns as ``max_cca_distance``.</span>
+
+<span class="sd">    n_principal_paths_candidates: [int]</span>
+<span class="sd">        The candidates of the number of principal paths.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">name</span><span class="p">,</span>
+                 <span class="n">max_cca_distance</span><span class="p">,</span>
+                 <span class="n">rms_cca_distance</span><span class="p">,</span>
+                 <span class="n">n_principal_paths_candidates</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_cca_distance</span> <span class="o">=</span> <span class="n">max_cca_distance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rms_cca_distance</span> <span class="o">=</span> <span class="n">rms_cca_distance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_principal_paths_candidates</span> <span class="o">=</span> <span class="n">n_principal_paths_candidates</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">class_name</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.__class__.__module__}</span><span class="s1">.</span><span class="si">{self.__class__.__qualname__}</span><span class="s1">&#39;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;&quot;&quot;</span><span class="si">{class_name}</span><span class="s2">: </span><span class="si">{self.name}</span><span class="s2"></span>
+<span class="s2">max_cca_distance:</span>
+<span class="si">{self.max_cca_distance}</span><span class="s2"></span>
+<span class="s2">rms_cca_distance:</span>
+<span class="si">{self.rms_cca_distance}</span><span class="s2"></span>
+<span class="s2">n_principal_paths_candidates:</span>
+<span class="si">{self.n_principal_paths_candidates}</span><span class="s2">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="treefit"><a class="viewcode-back" href="../../api/treefit.treefit.html#treefit.treefit">[docs]</a><span class="k">def</span> <span class="nf">treefit</span><span class="p">(</span><span class="n">target</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">perturbations</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">normalize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">reduce_dimension</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">build_tree</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">max_p</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">n_perturbations</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Estimate the goodness-of-fit between tree models and data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    target : dict</span>
+<span class="sd">        The target data to be estimated. It must be one of them:</span>
+
+<span class="sd">        * ``{&quot;counts&quot;: COUNTS}``</span>
+<span class="sd">        * ``{&quot;expression&quot;: EXPRESSION}``</span>
+
+<span class="sd">        ``COUNTS`` and ``EXPRESSION`` are ``numpy.array``. The rows</span>
+<span class="sd">        and columns correspond to samples such as cells and features</span>
+<span class="sd">        such as genes. ``COUNTS``&#39;s value is count data such as the</span>
+<span class="sd">        number of genes expressed. ``EXPRESSION``&#39;s value is</span>
+<span class="sd">        normalized count data.</span>
+
+<span class="sd">    name : string</span>
+<span class="sd">        The name of target as string.</span>
+
+<span class="sd">    perturbations : list</span>
+<span class="sd">        How to perturbate the target data.</span>
+
+<span class="sd">        If this is ``None``, all available perturbation methods are</span>
+<span class="sd">        used.</span>
+
+<span class="sd">        You can specify used perturbation methods as ``list``. Here</span>
+<span class="sd">        are available methods:</span>
+
+<span class="sd">        * ``&quot;poisson&quot;``: A perturbation method for counts data.</span>
+<span class="sd">        * ``&quot;knn&quot;``: A perturbation method for expression data.</span>
+
+<span class="sd">    normalize : callable</span>
+<span class="sd">        How to normalize counts data.</span>
+
+<span class="sd">        If this is ``None``, the default normalization is applied.</span>
+
+<span class="sd">        You can specify a ``callable`` object that normalized counts</span>
+<span class="sd">        data.</span>
+
+<span class="sd">    reduce_dimension : callable</span>
+<span class="sd">        How to reduce dimension of normalized count data.</span>
+
+<span class="sd">        If this is ``None``, the default dimensionality reduction is</span>
+<span class="sd">        applied.</span>
+
+<span class="sd">        You can specify a ``callable`` object that reduces dimension</span>
+<span class="sd">        of normalized counts data.</span>
+
+<span class="sd">    build_tree : callable</span>
+<span class="sd">        How to build a tree of expression data.</span>
+
+<span class="sd">        If this is ``None``, MST is built.</span>
+
+<span class="sd">        You can specify a function that builds tree of normalized</span>
+<span class="sd">        counts data.</span>
+
+<span class="sd">    max_p : int</span>
+<span class="sd">        How many low dimension Laplacian eigenvectors are used.</span>
+
+<span class="sd">        The default is ``20``.</span>
+
+<span class="sd">    n_perturbations : int</span>
+<span class="sd">        How many times to perturb.</span>
+
+<span class="sd">        The default is `20`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fit : treefit.fit.Fit</span>
+
+<span class="sd">        An estimated result as a :py:class:`treefit.fit.Fit` object.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    &gt;&gt;&gt; import treefit</span>
+<span class="sd">    # Generate a star tree data that have normalized expression values</span>
+<span class="sd">    # not count data.</span>
+<span class="sd">    &gt;&gt;&gt; star = treefit.data.generate_2d_n_arms_star_data(300, 3, 0.1)</span>
+<span class="sd">    # Estimate tree-likeness of the tree data.</span>
+<span class="sd">    &gt;&gt;&gt; fit = treefit.treefit({&quot;expression&quot;: star})</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;fit&quot;</span>
+    <span class="n">eigenvectors_list</span> <span class="o">=</span> <span class="n">calculate_eigenvectors_list</span><span class="p">(</span><span class="n">target</span><span class="p">,</span>
+                                                    <span class="n">perturbations</span><span class="p">,</span>
+                                                    <span class="n">normalize</span><span class="p">,</span>
+                                                    <span class="n">reduce_dimension</span><span class="p">,</span>
+                                                    <span class="n">build_tree</span><span class="p">,</span>
+                                                    <span class="n">max_p</span><span class="p">,</span>
+                                                    <span class="n">n_perturbations</span><span class="p">)</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">max_cca_distance_means</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">max_cca_distance_standard_deviations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">rms_cca_distance_means</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">rms_cca_distance_standard_deviations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">ps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">max_cca_distance_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">rms_cca_distance_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">eigenvectors_list</span><span class="p">)):</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">eigenvectors_list</span><span class="p">[</span><span class="mi">0</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">:</span><span class="n">p</span><span class="p">]</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">eigenvectors_list</span><span class="p">[</span><span class="n">i</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">:</span><span class="n">p</span><span class="p">]</span>
+            <span class="n">canonical_correlation</span> <span class="o">=</span> <span class="n">calculate_canonical_correlation</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+            <span class="n">max_cca_distance_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">calculate_grassmann_distance_max_cca</span><span class="p">(</span><span class="n">canonical_correlation</span><span class="p">))</span>
+            <span class="n">rms_cca_distance_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">calculate_grassmann_distance_rms_cca</span><span class="p">(</span><span class="n">canonical_correlation</span><span class="p">))</span>
+        <span class="n">max_cca_distance_means</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">max_cca_distance_values</span><span class="p">))</span>
+        <span class="n">max_cca_distance_standard_deviations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">max_cca_distance_values</span><span class="p">))</span>
+        <span class="n">rms_cca_distance_means</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rms_cca_distance_values</span><span class="p">))</span>
+        <span class="n">rms_cca_distance_standard_deviations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">rms_cca_distance_values</span><span class="p">))</span>
+
+    <span class="n">n_principal_paths_candidates</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_p</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">rms_cca_distance_mean_before</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rms_cca_distance_mean_before</span> <span class="o">=</span> <span class="n">rms_cca_distance_means</span><span class="p">[</span><span class="n">p</span> <span class="o">-</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="n">rms_cca_distance_mean</span> <span class="o">=</span> <span class="n">rms_cca_distance_means</span><span class="p">[</span><span class="n">p</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">rms_cca_distance_mean_after</span> <span class="o">=</span> <span class="n">rms_cca_distance_means</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">rms_cca_distance_mean_before</span> <span class="o">&gt;</span> <span class="n">rms_cca_distance_mean</span> <span class="ow">and</span> \
+           <span class="n">rms_cca_distance_mean</span> <span class="o">&lt;</span> <span class="n">rms_cca_distance_mean_after</span><span class="p">:</span>
+            <span class="n">n_principal_paths_candidates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">max_cca_distance</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s1">&#39;p&#39;</span><span class="p">:</span> <span class="n">ps</span><span class="p">,</span>
+        <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="n">max_cca_distance_means</span><span class="p">,</span>
+        <span class="s1">&#39;standard_deviation&#39;</span><span class="p">:</span> <span class="n">max_cca_distance_standard_deviations</span><span class="p">,</span>
+    <span class="p">})</span>
+    <span class="n">rms_cca_distance</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s1">&#39;p&#39;</span><span class="p">:</span> <span class="n">ps</span><span class="p">,</span>
+        <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="n">rms_cca_distance_means</span><span class="p">,</span>
+        <span class="s1">&#39;standard_deviation&#39;</span><span class="p">:</span> <span class="n">rms_cca_distance_standard_deviations</span><span class="p">,</span>
+    <span class="p">})</span>
+    <span class="k">return</span> <span class="n">Fit</span><span class="p">(</span><span class="n">name</span><span class="p">,</span>
+               <span class="n">max_cca_distance</span><span class="p">,</span>
+               <span class="n">rms_cca_distance</span><span class="p">,</span>
+               <span class="n">n_principal_paths_candidates</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="o">*</span><span class="n">fits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot estimated results to get insight.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    *fits : [treefit.fit.Fit]</span>
+<span class="sd">        The estimated results by treefit.treefit() to be visualized.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import treefit</span>
+<span class="sd">    # Generate a tree data.</span>
+<span class="sd">    &gt;&gt;&gt; tree = treefit.data.generate_2d_n_arms_star_data(200, 3, 0.1)</span>
+<span class="sd">    # Estimate the goodness-of-fit between tree models and the tree data.</span>
+<span class="sd">    &gt;&gt;&gt; fit = treefit.treefit({&quot;expression&quot;: tree}, &quot;tree&quot;)</span>
+<span class="sd">    # Visualize the estimated result.</span>
+<span class="sd">    &gt;&gt;&gt; treefit.plot(fit)</span>
+<span class="sd">    # You can mix multiple estimated results by adding &quot;name&quot; column.</span>
+<span class="sd">    &gt;&gt;&gt; tree2 = treefit.data.generate_2d_n_arms_star_data(200, 3, 0.9)</span>
+<span class="sd">    &gt;&gt;&gt; fit2 = treefit.treefit({&quot;expression&quot;: tree2}, &quot;tree2&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; treefit.plot(fit, fit2)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">max_ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">rms_ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">plot_data_frame</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">value_label</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">data_frame</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">]</span>
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">data_frame</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span>
+        <span class="n">standard_deviation</span> <span class="o">=</span> <span class="n">data_frame</span><span class="p">[</span><span class="s1">&#39;standard_deviation&#39;</span><span class="p">]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;p: Dimensionality of the feature space of trees&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> (mean and SD)&#39;</span> <span class="o">%</span> <span class="n">value_label</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">mean</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">p</span><span class="p">,</span>
+                        <span class="n">mean</span> <span class="o">-</span> <span class="n">standard_deviation</span><span class="p">,</span>
+                        <span class="n">mean</span> <span class="o">+</span> <span class="n">standard_deviation</span><span class="p">,</span>
+                        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                        <span class="n">zorder</span><span class="o">=-</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">ticker</span><span class="o">.</span><span class="n">MultipleLocator</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">fit</span> <span class="ow">in</span> <span class="n">fits</span><span class="p">:</span>
+        <span class="n">plot_data_frame</span><span class="p">(</span><span class="n">max_ax</span><span class="p">,</span>
+                        <span class="s1">&#39;Analysis of the structural instability</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span>
+                        <span class="s1">&#39;of the estimated trees&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;max_cca_distance&#39;</span><span class="p">,</span>
+                        <span class="n">fit</span><span class="o">.</span><span class="n">max_cca_distance</span><span class="p">)</span>
+        <span class="n">plot_data_frame</span><span class="p">(</span><span class="n">rms_ax</span><span class="p">,</span>
+                        <span class="s1">&#39;Prediction for</span><span class="se">\n</span><span class="s1">the number of principal paths&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;rms_cca_distance&#39;</span><span class="p">,</span>
+                        <span class="n">fit</span><span class="o">.</span><span class="n">rms_cca_distance</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fits</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">legend</span> <span class="o">=</span> <span class="p">[</span><span class="n">fit</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">fit</span> <span class="ow">in</span> <span class="n">fits</span><span class="p">]</span>
+        <span class="n">max_ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">legend</span><span class="p">)</span>
+        <span class="n">rms_ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">legend</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020 Momoko Hayamizu
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -20,3 +20,11 @@ help:
 %: Makefile
 	PYTHONLIB=. $(SPHINXAUTOGEN) $(SOURCEDIR)/api/*.rst
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+release:
+	version=$$(						\
+	  grep __version__ treefit/__init__.py |		\
+	    sed -e "s/__version__ = '\\(.*\\)'/\\1/") &&	\
+	$(MAKE) html &&						\
+	rm -rf docs/$${version} &&				\
+	mv $(BUILDDIR)/html docs/$${version}
