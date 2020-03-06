@@ -16,4 +16,11 @@ pip install treefit
 
 ## Usage
 
-TODO
+The main functions are `treefit.treefit()` and `treefit.plot()`:
+
+```R
+fit = treefit.treefit(YOUR_SINGLE_CELL_GENE_EXPRESSION_DATA)
+treefit.plot(fit)
+```
+
+See https://hayamizu-lab.github.io/treefit-python/ for details.
