@@ -9,6 +9,10 @@ SPHINXAUTOGEN ?= sphinx-autogen
 SOURCEDIR     = doc
 BUILDDIR      = doc/_build
 
+VERSION = $(shell \
+  grep __version__ treefit/__init__.py | \
+    sed -e "s/__version__ = '\\(.*\\)'/\\1/")
+
 # Put it first so that "make" without argument is like "make help".
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
@@ -21,12 +25,21 @@ help:
 	PYTHONLIB=. $(SPHINXAUTOGEN) $(SOURCEDIR)/api/*.rst
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-release:
-	version=$$(							\
-	  grep __version__ treefit/__init__.py |			\
-	    sed -e "s/__version__ = '\\(.*\\)'/\\1/") &&		\
-	$(MAKE) html &&							\
-	rm -rf docs/$${version} &&					\
-	mv $(BUILDDIR)/html docs/$${version} &&				\
-	sed -i.bak -e "s,URL=.*/,URL=$${version}/," docs/index.html &&	\
+update_document:
+	$(MAKE) html
+	rm -rf docs/$(VERSION)
+	mv $(BUILDDIR)/html docs/$(VERSION)
+	sed -i.bak -e "s,URL=.*/,URL=$(VERSION)/," docs/index.html
 	rm -f docs/index.html.bak
+
+dist:
+	python3 setup.py sdist
+
+upload:
+	twine --repository treefit upload dist/treefit-$(VERSION).tar.gz
+
+tag:
+	git tag -a $(VERSION) -m "treefit $(VERSION) has been released!!!"
+	git push --tags
+
+release: dist upload tag
