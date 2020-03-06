@@ -34,10 +34,14 @@ release = treefit.__version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'IPython.sphinxext.ipython_console_highlighting',
+    'IPython.sphinxext.ipython_directive',
+    'matplotlib.sphinxext.plot_directive',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
-    'sphinx.ext.napoleon',
+    'sphinx.ext.githubpages',
     'sphinx.ext.mathjax',
+    'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
 ]
 

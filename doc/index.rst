@@ -17,7 +17,7 @@
 Treefit for Python - The first software for quantitative trajectory inference
 =============================================================================
 
-This is an implementation of `**Treefit**
+This is an implementation of `Treefit
 <https://hayamizu-lab.github.io/treefit/>`_ in Python.
 
 **Treefit** is a novel data analysis toolkit that helps you perform

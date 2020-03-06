@@ -147,6 +147,16 @@ class Fit:
         self.rms_cca_distance = rms_cca_distance
         self.n_principal_paths_candidates = n_principal_paths_candidates
 
+    def __str__(self):
+        class_name = f'{self.__class__.__module__}.{self.__class__.__qualname__}'
+        return f"""{class_name}: {self.name}
+max_cca_distance:
+{self.max_cca_distance}
+rms_cca_distance:
+{self.rms_cca_distance}
+n_principal_paths_candidates:
+{self.n_principal_paths_candidates}"""
+
 def treefit(target,
             name=None,
             perturbations=None,
@@ -344,7 +354,8 @@ def plot(*fits):
     >>> fit2 = treefit.treefit({"expression": tree2}, "tree2")
     >>> treefit.plot(fit, fit2)
     """
-    fig, axes = plt.subplots(1, 2)
+
+    fig, axes = plt.subplots(1, 2, figsize=(10, 6))
     max_ax = axes[0]
     rms_ax = axes[1]
 
