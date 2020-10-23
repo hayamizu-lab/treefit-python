@@ -8,7 +8,7 @@
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# GNU Lesser General Public License for more details.
 #
 # You should have received a copy of the GNU Lesser General Public
 # License along with this program.  If not, see
@@ -147,4 +147,58 @@ def generate_2d_n_arms_linked_star_data(n_samples_list,
         sub_star[:, 1] = sub_star[:, 1] + sub_star_offsets[1]
         star[n_samples_offset:(n_samples_offset+n_samples), :] = sub_star
         n_samples_offset += n_samples
+    return star
+
+def generate_2d_n_arms_star_data(n_samples, n_arms, fatness):
+    """Generate a 2-dimensional star tree data that contain ``n_samples``
+    data points and fit a star tree with ``n_arms`` arms.
+
+    Parameters
+    ----------
+    n_samples : int
+        The number of samples to be generated.
+
+    n_arms : int
+        The number of arms to be generated.
+
+    fatness : float
+        How fat from the based star tree. ``[0.0, 1.0]`` is available
+        value range.
+
+    Returns
+    -------
+    star : numpy.array
+
+        A generated ``numpy.array``. The rows and columns correspond
+        to samples and features.
+
+    Examples
+    --------
+    >>> import treefit
+    >>> from matplotlib.pyplot as plt
+    # Generate a 2-dimensional star tree data that contain 500 data points
+    # and fit a star tree with 3 arms. The generated data are a bit noisy but
+    # tree-like.
+    >>> star_tree_like = treefit.data.generate_2d_n_arms_star_data(500, 3, 0.1)
+    >>> plt.figure()
+    >>> plt.scatter(star_tree_like[:, 0], star_tree_like[:, 1])
+    # Generate a 2-dimensional star tree data that contain 600 data points
+    # and fit a star tree with 5 arms. The generated data are very noisy and
+    # less tree-like.
+    >>> star_less_tree_like = treefit.data.generate_2d_n_arms_star_data(600, 5, 0.9)
+    >>> plt.figure()
+    >>> plt.scatter(star_less_tree_like[:, 0], \
+    ...             star_less_tree_like[:, 1])
+    """
+    n_features = 2
+    standard_deviation = fatness / n_arms
+    star = np.zeros((n_samples, n_features), np.float)
+    for i in range(n_samples):
+        arm = np.random.choice(range(n_arms))
+        theta = (arm + 1) / n_arms * n_features * np.pi
+        position = np.array([np.cos(theta), np.sin(theta)])
+        position = position * np.random.uniform()
+        position = position + np.random.normal(scale=standard_deviation,
+                                               size=n_features)
+        star[i, :] = position
     return star
